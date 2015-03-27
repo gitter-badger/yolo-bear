@@ -12,6 +12,7 @@ BEGIN
     
     declare annoid int;
     declare fn varchar(45);
+    declare senti varchar(1);
     
     
     declare anp1 int;
@@ -108,7 +109,7 @@ BEGIN
             set verb4id=null;
             
         
-			select AnpId1,AnpId2,AnpId3,AnpId4,VnpIdA,VnpIdB,VnpIdC,VnpIdD from d_annotation where AnnotaId=annoid into anp1,anp2,anp3,anp4,vnp1,vnp2,vnp3,vnp4;
+			select AnpId1,AnpId2,AnpId3,AnpId4,VnpIdA,VnpIdB,VnpIdC,VnpIdD,Sentiment from d_annotation where AnnotaId=annoid into anp1,anp2,anp3,anp4,vnp1,vnp2,vnp3,vnp4,senti;
             if anp1 is null and anp2 is not null then
 				set anp1=anp2;
                 set anp2=anp3;
@@ -169,17 +170,40 @@ BEGIN
 				set adj4id=null;
             end if;
             
-            insert into t_word_from_anno(AnnotaId,verb1_id,verb1,verb2_id,verb2,verb3_id,verb3,verb4_id,verb4,adj1_id,adj1,adj2_id,adj2,adj3_id,adj3,adj4_id,adj4,FileName) values(annoid,verb1id,verb1,verb2id,verb2,verb3id,verb3,verb4id,verb4,adj1id,adj1,adj2id,adj2,adj3id,adj3,adj4id,adj4,fn);
+            /*deal with null data issue*/
+            if verb1 is null and verb2 is null and verb3 is null and verb4 is null and adj1 is null and adj2 is null and adj3 is null and adj4 is null then
+				/*Jump*/
+                set adj4=null;
+			else
+					insert into t_word_from_anno(AnnotaId,verb1_id,verb1,verb2_id,verb2,verb3_id,verb3,verb4_id,verb4,adj1_id,adj1,adj2_id,adj2,adj3_id,adj3,adj4_id,adj4,FileName,Sentiment) values(annoid,verb1id,verb1,verb2id,verb2,verb3id,verb3,verb4id,verb4,adj1id,adj1,adj2id,adj2,adj3id,adj3,adj4id,adj4,fn,senti);
+            end if;
             
+            
+            if adj1 is not null then
             insert ignore into t_adjs(adj,adjid) values(adj1,adj1id);
+            end if;
+            if adj2 is not null then
             insert ignore into t_adjs(adj,adjid) values(adj2,adj2id);
+            end if;
+            if adj3 is not null then
             insert ignore into t_adjs(adj,adjid) values(adj3,adj3id);
+            end if;
+            if adj4 is not null then
             insert ignore into t_adjs(adj,adjid) values(adj4,adj4id);
+            end if;
             
+            if verb1 is not null then
             insert ignore into t_verbs(verb,verbid) values(verb1,verb1id);
+            end if;
+            if verb2 is not null then
             insert ignore into t_verbs(verb,verbid) values(verb2,verb2id);
+            end if;
+            if verb3 is not null then
             insert ignore into t_verbs(verb,verbid) values(verb3,verb3id);
+            end if;
+            if verb4 is not null then
             insert ignore into t_verbs(verb,verbid) values(verb4,verb4id);
+            end if;
             
             
 		end if;
