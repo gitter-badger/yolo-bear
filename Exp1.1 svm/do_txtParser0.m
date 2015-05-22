@@ -1,7 +1,7 @@
-function [ output_args ] = do_txtParser()
+function [ output_args ] = do_txtParser0()
 
 addpath('libsvm');
-%Convert csv into libsvm format
+%Convert database csv to weka csv
 %   some other jobs
 [Sid,Annoid,verb1_id,verb1,verb2_id,verb2,verb3_id,verb3,verb4_id,verb4,adj1_id,adj1,adj2_id,adj2,adj3_id,adj3,adj4_id,adj4,filename,sentiment]=textread('filelist.csv','%d %d %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s','delimiter',',','headerlines',1);
 %some of the type is double and others are cell, could not be concatenated.
@@ -27,7 +27,8 @@ for i=1:dataSize
         if strcmp(char(Anno(i,col)),'NULL')~=1
           for k=1:dictSize
             if strcmp(char(Anno(i,col)),char(dict(k)))
-                anno2(k)=anno2(k)+1;
+%                 anno2(k)=anno2(k)+1;
+                anno2(k)=1;
                 dicFreqCount(k)=dicFreqCount(k)+1;
             end
           end
@@ -36,7 +37,7 @@ for i=1:dataSize
     
     %Is positive or not positive
     y=double(-1);
-    if strcmp(char(sentiment(i)),'-')
+    if strcmp(char(sentiment(i)),'+')
       y=double(1);  
     end
     
@@ -47,7 +48,9 @@ end
 
 %resData is the training set, should be convert into libsvm format later!
 
-svmwrite('exp1.txt',resData(:,dictSize+1),sparse(resData(:,1:dictSize)));
+% svmwrite('exp1.txt',resData(:,dictSize+1),sparse(resData(:,1:dictSize)));
+
+csvwrite('exp1.csv',resData);
 
 end
 
