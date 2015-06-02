@@ -1,5 +1,7 @@
 #About this git repository
 
+[![Join the chat at https://gitter.im/ColdZoo/yolo-bear](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/ColdZoo/yolo-bear?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 My dear friend:
 
 >We meet again! Hope you have fun with this lovely *yolo-bear*.
